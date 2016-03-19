@@ -132,7 +132,7 @@ void printArray(int arr[], int length)
 	{
 		std::cout << arr[index] << " ";
 	}
-	std::cout << "\n\n\n\n\n\n";
+	std::cout << "\n";
 }
 
 
