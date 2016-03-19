@@ -138,7 +138,7 @@ void printArray(int arr[], int length)
 
 int main()
 {
-	const int length = 100000;
+	const int length = 100000;	// 100,000
 	int nArray[length] = {};	// All elements initialized to zero
 
 	// Use a hardware entropy source to generate a random seed
@@ -147,7 +147,7 @@ int main()
 	// Initialize our mersenne twister with the generated random seed
 	std::mt19937 mersenne(rd());
 
-	// Fill our array with random numbers in the range 0 to 100
+	// Fill our array with random numbers in the range 0 to 1,000,000
 	for (int index = 0; index < length; ++index)
 		nArray[index] = mersenne() % 1000000;
 
