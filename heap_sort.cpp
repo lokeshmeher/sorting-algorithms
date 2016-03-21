@@ -1,14 +1,11 @@
 /*
 	By Lokesh Nandan Meher.
 
-	This Heap Sort implementation uses "siftDown" (O(logn)).
-	"siftUp" has worse time complexity (O(nlog(n))).
+	- Uses "siftDown" approach having time complexity O(logn)."siftUp" has worse time complexity of O(nlog(n)).
 
 	Note:
-	<random> header is available with C++11 or later.
-	Use rand() [include header <cstdlib>] instead for generating random numbers
-	if using older compilers.
-	You can use time(0) [include header <ctime>] to seed srand().
+	<random> is a C++11 feature. Use rand() [include header <cstdlib>] instead for older compilers. time(0), defined in <ctime>,
+	can be used to seed srand().
 */
 
 #include <iostream>
