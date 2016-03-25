@@ -162,7 +162,7 @@ int main()
 	// Initialize our mersenne twister with the generated random seed
 	std::mt19937 mersenne(rd());
 
-	// Fill our array with random numbers in the range 0 to 100
+	// Fill our array with random numbers in the range 0 to 1000
 	for (int index = 0; index < length; ++index)
 		nArray[index] = mersenne() % 1000;
 
