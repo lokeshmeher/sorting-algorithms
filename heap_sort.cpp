@@ -1,22 +1,36 @@
 /*
 	By Lokesh Nandan Meher.
-
 	- Uses "siftDown" approach having time complexity O(logn)."siftUp" has worse time complexity of O(nlog(n)).
-
 	Note:
 	<random> is a C++11 feature. Use rand() [include header <cstdlib>] instead for older compilers. time(0), defined in <ctime>,
 	can be used to seed srand().
 */
 
+
 #include <iostream>
 #include <random>
+
+
+typedef bool(*SortOrder)(int, int);
+
+
+bool ascending(int x, int y)
+{
+	return x > y;	// comparison in case of building a max heap
+}
+
+
+bool descending(int x, int y)
+{
+	return x < y;	// comparison in case of building a min heap
+}
 
 
 // Returns index of parent node in the array.
 // iChild is index of child node in the array.
 inline int iParent(int iChild)
 {
-	return (iChild - 1) / 2;	// floor(return value) -- using integer division
+	return (iChild - 1) / 2;	// floor value -- using integer division
 }
 
 
@@ -37,14 +51,17 @@ inline int iRightChild(int iParent)
 
 
 // Function forward declarations using function prototypes.
-void heapify(int arr[], int length);
-void siftDown(int arr[], int iStart, int iEnd);
+void heapify(int arr[], int length, SortOrder order);
+void siftDown(int arr[], int iStart, int iEnd, SortOrder order);
 
 
-void heapSort(int arr[], int length)
+// Defaults to sorting elements in ascending order
+void heapSort(int arr[], int length, SortOrder order = ascending)
 {
-	// Build max heap
-	heapify(arr, length);
+	// Build max or min heap
+	// For sorting in ascending order, we need to build a max heap
+	// For sorting in descending order, we need to build a min heap
+	heapify(arr, length, order);
 	
 	// Initially, the entire array is the heap
 	int iHeapEnd = length - 1;
@@ -60,13 +77,14 @@ void heapSort(int arr[], int length)
 		--iHeapEnd;
 
 		// The swap ruined the heap property, restore it
-		siftDown(arr, 0, iHeapEnd);
+		siftDown(arr, 0, iHeapEnd, order);
 	}
 }
 
 
 // Put elements of arr in heap order, in-place.
-void heapify(int arr[], int length)
+// Defaults to max heap(for sorting in ascending order)
+void heapify(int arr[], int length, SortOrder order)
 {
 	// Start from the last parent
 	int iNode = iParent(length - 1);
@@ -75,7 +93,7 @@ void heapify(int arr[], int length)
 	{
 		// Sift down the node at index iNode in arr to proper place
 		// such that all nodes below the index are in heap order.
-		siftDown(arr, iNode, length - 1);
+		siftDown(arr, iNode, length - 1, order);
 
 		// Go to the previous parent
 		--iNode;
@@ -87,7 +105,7 @@ void heapify(int arr[], int length)
 
 // Repair the heap whose root element is at index iNode,
 // assuming the heaps rooted at its children nodes are valid.
-void siftDown(int arr[], int iStart, int iEnd)
+void siftDown(int arr[], int iStart, int iEnd, SortOrder order)
 {
 	int iRoot = iStart;
 	
@@ -97,11 +115,11 @@ void siftDown(int arr[], int iStart, int iEnd)
 		int iChild = iLeftChild(iRoot);
 		int iSwap = iRoot;	// Keeps track of child to swap with
 
-		if (arr[iChild] > arr[iSwap])
+		if (order(arr[iChild], arr[iSwap]))
 			iSwap = iChild;
 
 		// If there is a right child and that child is greater
-		if (iChild + 1 <= iEnd && arr[iChild + 1] > arr[iSwap])
+		if (iChild + 1 <= iEnd && order(arr[iChild + 1], arr[iSwap]))
 			iSwap = iChild + 1;
 
 		if (iSwap == iRoot)
@@ -129,13 +147,13 @@ void printArray(int arr[], int length)
 	{
 		std::cout << arr[index] << " ";
 	}
-	std::cout << "\n";
+	std::cout << "\n--------------------------\n";
 }
 
 
 int main()
 {
-	const int length = 100000;	// 100,000
+	const int length = 100;
 	int nArray[length] = {};	// All elements initialized to zero
 
 	// Use a hardware entropy source to generate a random seed
@@ -144,14 +162,16 @@ int main()
 	// Initialize our mersenne twister with the generated random seed
 	std::mt19937 mersenne(rd());
 
-	// Fill our array with random numbers in the range 0 to 1,000,000
+	// Fill our array with random numbers in the range 0 to 100
 	for (int index = 0; index < length; ++index)
-		nArray[index] = mersenne() % 1000000;
+		nArray[index] = mersenne() % 1000;
 
 	printArray(nArray, length);
 	
-	heapSort(nArray, length);
-	
+	heapSort(nArray, length);		// sort in ascending order
+	printArray(nArray, length);
+
+	heapSort(nArray, length, descending);	// sort in descending order
 	printArray(nArray, length);
 
 	return 0;
